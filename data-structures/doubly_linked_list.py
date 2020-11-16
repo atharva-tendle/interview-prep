@@ -8,11 +8,10 @@ class Node:
         self.value = value
         # pointer to the next node.
         self.next = None
+        # pointer to prev node.
+        self.prev = None
 
-class SinglyLinkedList:
-    """
-    This implements the Singly Linked List Datastructure.
-    """
+class DoublyLinkedList:
 
     def __init__(self, head_val=None):
         # initialize head.
@@ -43,13 +42,15 @@ class SinglyLinkedList:
 
             # add node at the tail.
             node.next = curr_node
+            # update prev pointer.
+            curr_node.prev = node
         return 
-
+    
     def traverse(self):
         """
         Traverses the linked list and prints it out.
         """
-         if self.head:
+        if self.head:
             # temp node for traversal.
             node = self.head
         else:
@@ -58,10 +59,10 @@ class SinglyLinkedList:
 
         # traverse the linked list and print it.
         while node:
-            print(f"{node.value}", end=" -> ")
+            print(f"{node.value}", end=" <-> ")
             node = node.next
         print()
-
+    
     def delete(self, del_val):
         """
         Deletes a node if the value of node exists.
@@ -76,29 +77,32 @@ class SinglyLinkedList:
         # if del_val is head.
         if self.head:
             if self.head.value == del_val:
+                # break connection from new head to current head.
+                if self.head.next:
+                    self.head.next.prev = None
+                # set new head.
                 self.head = self.head.next
                 print("Node Deleted!")
                 return
         
-        # keep two pointers for deleting node.
-        p1 = p2 = self.head
+        # keep pointer for deleting node.
+        p =  self.head
 
-        while p2 is not None:
+        while p is not None:
             # if delete value found.
-            if p2.value == del_val:
+            if p.value == del_val:
                 break
             # move pointers through ll.
-            p1 = p2
-            p2 = p2.next
+            p = p.next
         
         # if del_value not found.
-        if p2 is None:
+        if p is None:
             print("Value not found!")
         
-        # unlink node if del_val is matched.
-        p1.next = p2.next
-        p2 = None
+        # unlink    al is matched.
+        # set prev.next to next
+        p.prev.next = p.next
+        # set next.prev to prev
+        if p.next:
+            p.next.prev = p.prev
         print("Node Deleted!")
-        
-
-        
